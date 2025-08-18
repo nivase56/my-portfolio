@@ -30,7 +30,9 @@ const GLBModelViewer: React.FC = () => {
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.2; // Slightly brighter exposure
     renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap; // Softer shadows
     rendererRef.current = renderer;
     mountRef.current.appendChild(renderer.domElement);
 
@@ -65,26 +67,69 @@ const GLBModelViewer: React.FC = () => {
     };
     window.addEventListener("wheel", handleScroll, { passive: true });
 
-    // ✅ Lighting (3-point setup)
-    sceneRef.current.add(new THREE.AmbientLight(0xffffff, 0.4));
+    // ✅ Enhanced Lighting Setup for Better Face Illumination
+    
+    // Ambient light - slightly warmer and brighter for better face visibility
+    const ambientLight = new THREE.AmbientLight(0xfff5e6, 0.6);
+    sceneRef.current.add(ambientLight);
 
-    const keyLight = new THREE.DirectionalLight(0xffffff, 1.2);
-    keyLight.position.set(5, 10, 5);
+    // Key Light - Main directional light positioned to illuminate faces
+    const keyLight = new THREE.DirectionalLight(0xffffff, 1.5);
+    keyLight.position.set(3, 4, 6);
     keyLight.castShadow = true;
     keyLight.shadow.bias = -0.0001;
-    keyLight.shadow.mapSize.set(1024, 1024);
+    keyLight.shadow.mapSize.set(2048, 2048); // Higher resolution shadows
+    keyLight.shadow.camera.near = 0.1;
+    keyLight.shadow.camera.far = 50;
+    keyLight.shadow.camera.left = -10;
+    keyLight.shadow.camera.right = 10;
+    keyLight.shadow.camera.top = 10;
+    keyLight.shadow.camera.bottom = -10;
     sceneRef.current.add(keyLight);
 
-    const fillLight = new THREE.DirectionalLight(0xffffff, 0.8);
-    fillLight.position.set(-5, 5, 2);
+    // Fill Light - Softer light from the opposite side to reduce harsh shadows
+    const fillLight = new THREE.DirectionalLight(0xffe6cc, 0.8);
+    fillLight.position.set(-4, 3, 4);
     sceneRef.current.add(fillLight);
 
-    const rimLight = new THREE.DirectionalLight(0xffffff, 0.6);
-    rimLight.position.set(0, 8, -5);
+    // Rim Light - Back light to create separation and depth
+    const rimLight = new THREE.DirectionalLight(0xe6f3ff, 0.7);
+    rimLight.position.set(0, 6, -8);
     sceneRef.current.add(rimLight);
+
+    // ✅ Face-specific lighting - Point lights positioned for character faces
+    const faceLight1 = new THREE.PointLight(0xffffff, 0.8, 8);
+    faceLight1.position.set(-1.5, 1.5, 2); // For left character
+    sceneRef.current.add(faceLight1);
+
+    const faceLight2 = new THREE.PointLight(0xffffff, 0.8, 8);
+    faceLight2.position.set(0, 1.5, 2); // For middle character
+    sceneRef.current.add(faceLight2);
+
+    const faceLight3 = new THREE.PointLight(0xffffff, 0.8, 8);
+    faceLight3.position.set(1.5, 1.5, 2); // For right character
+    sceneRef.current.add(faceLight3);
+
+    // ✅ Hemisphere light for natural outdoor-like lighting
+    const hemisphereLight = new THREE.HemisphereLight(0x87ceeb, 0x8b4513, 0.4);
+    sceneRef.current.add(hemisphereLight);
 
     // ✅ Loader
     const loader = new GLTFLoader();
+    const textureLoader = new THREE.TextureLoader();
+    
+    textureLoader.load("/glb/image.jpg", (texture) => {
+      const imageAspect = texture.image.width / texture.image.height;
+      const geometry = new THREE.PlaneGeometry(1, 1);
+      const material = new THREE.MeshBasicMaterial({ map: texture });
+      const plane = new THREE.Mesh(geometry, material);
+
+      const scaleFactor = 12;
+      plane.scale.set(scaleFactor * imageAspect, scaleFactor, 1);
+      plane.position.set(-1, 3, -15);
+
+      sceneRef.current.add(plane);
+    });
 
     // Background
     loader.load("/glb/background.glb", (gltf) => {
@@ -94,19 +139,40 @@ const GLBModelViewer: React.FC = () => {
       sceneRef.current.add(bg);
     });
 
-    // Character Models
+    // Character Models with enhanced material processing
     ["/glb/sleeping.glb", "/glb/typing.glb", "/glb/banging.glb"].forEach(
       (path, index) => {
         loader.load(path, (gltf) => {
           const model = gltf.scene;
           model.scale.set(1.5, 1.5, 1.5);
           model.position.set(index * 2 - 1.5, -0.5, 0);
+          
+          // Enhanced material processing for better face lighting
           model.traverse((child) => {
             if ((child as THREE.Mesh).isMesh) {
               child.castShadow = true;
               child.receiveShadow = true;
+              
+              // Enhance materials for better light interaction
+              const mesh = child as THREE.Mesh;
+              if (mesh.material) {
+                if (Array.isArray(mesh.material)) {
+                  mesh.material.forEach(mat => {
+                    if (mat instanceof THREE.MeshStandardMaterial) {
+                      mat.roughness = Math.max(10, mat.roughness || 0.5);
+                      mat.metalness = Math.min(0.1, mat.metalness || 0);
+                      mat.envMapIntensity = 1.8;
+                    }
+                  });
+                } else if (mesh.material instanceof THREE.MeshStandardMaterial) {
+                  mesh.material.roughness = Math.max(10, mesh.material.roughness || 0.5);
+                  mesh.material.metalness = Math.min(0.1, mesh.material.metalness || 0);
+                  mesh.material.envMapIntensity = 1.8;
+                }
+              }
             }
           });
+          
           sceneRef.current.add(model);
 
           if (gltf.animations.length > 0) {
@@ -161,54 +227,23 @@ const GLBModelViewer: React.FC = () => {
       }}
     >
       {/* ✅ Overlay Text */}
-      <div className="title">Im Nivase</div>
+      {/* <div className="title">Im Nivase</div> */}
 
       <style jsx>{`
-  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap');
 
-  .title {
-    position: absolute;
-    top: 12%;
-    left: 35%;
-    font-family: 'Orbitron', sans-serif;
-    font-size: 5rem;
-    font-weight: 900;
-    letter-spacing: 8px;
-    text-transform: uppercase;
-    background: linear-gradient(90deg, #ff0080, #7928ca, #2afadf, #ff0080);
-    background-size: 300% 300%;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    animation: gradientShift 6s ease infinite, glowPulse 3s ease-in-out infinite;
-    text-shadow: 
-      0 0 20px rgba(255, 0, 128, 0.8),
-      0 0 40px rgba(121, 40, 202, 0.8),
-      0 0 80px rgba(42, 250, 223, 0.8);
-  }
-
-  @keyframes gradientShift {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-  }
-
-  @keyframes glowPulse {
-    0%, 100% {
-      text-shadow:
-        0 0 10px #ff0080,
-        0 0 20px #7928ca,
-        0 0 40px #2afadf,
-        0 0 80px #ff0080;
-    }
-    50% {
-      text-shadow:
-        0 0 20px #ff66cc,
-        0 0 40px #9b30ff,
-        0 0 80px #33ffe0,
-        0 0 160px #ff33aa;
-    }
-  }
-`}</style>
+        .title {
+          position: absolute;
+          top: 12%;
+          left: 35%;
+          font-family: 'Orbitron', sans-serif;
+          font-size: 5rem;
+          font-weight: 900;
+          letter-spacing: 8px;
+          text-transform: uppercase;
+          color: #ffffff;
+        }
+      `}</style>
     </div>
   );
 };
