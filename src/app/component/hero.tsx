@@ -83,7 +83,7 @@ const GLBModelViewer: React.FC = () => {
     rimLight.position.set(0, 8, -5);
     sceneRef.current.add(rimLight);
 
-    // ✅ Loader (reused)
+    // ✅ Loader
     const loader = new GLTFLoader();
 
     // Background
@@ -153,8 +153,63 @@ const GLBModelViewer: React.FC = () => {
   return (
     <div
       ref={mountRef}
-      style={{ width: "100%", height: "100vh", background: "black" }}
-    />
+      style={{
+        width: "100%",
+        height: "100vh",
+        background: "white",
+        position: "relative",
+      }}
+    >
+      {/* ✅ Overlay Text */}
+      <div className="title">Im Nivase</div>
+
+      <style jsx>{`
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap');
+
+  .title {
+    position: absolute;
+    top: 12%;
+    left: 35%;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 5rem;
+    font-weight: 900;
+    letter-spacing: 8px;
+    text-transform: uppercase;
+    background: linear-gradient(90deg, #ff0080, #7928ca, #2afadf, #ff0080);
+    background-size: 300% 300%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: gradientShift 6s ease infinite, glowPulse 3s ease-in-out infinite;
+    text-shadow: 
+      0 0 20px rgba(255, 0, 128, 0.8),
+      0 0 40px rgba(121, 40, 202, 0.8),
+      0 0 80px rgba(42, 250, 223, 0.8);
+  }
+
+  @keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  @keyframes glowPulse {
+    0%, 100% {
+      text-shadow:
+        0 0 10px #ff0080,
+        0 0 20px #7928ca,
+        0 0 40px #2afadf,
+        0 0 80px #ff0080;
+    }
+    50% {
+      text-shadow:
+        0 0 20px #ff66cc,
+        0 0 40px #9b30ff,
+        0 0 80px #33ffe0,
+        0 0 160px #ff33aa;
+    }
+  }
+`}</style>
+    </div>
   );
 };
 
