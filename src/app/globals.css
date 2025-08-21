@@ -1,1 +1,23 @@
 @import "tailwindcss";
+/* Glass effect scrollbar */
+::-webkit-scrollbar {
+  width: 10px; /* scrollbar width */
+}
+
+::-webkit-scrollbar-track {
+  background: transparent; /* fully transparent track */
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3); /* translucent white */
+  border-radius: 10px;
+  backdrop-filter: blur(6px); /* glass blur effect */
+  border: 2px solid rgba(255, 255, 255, 0.2); /* glass border */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+body {
+ overflow: hidden; /* Hide default scrollbar */
+}
