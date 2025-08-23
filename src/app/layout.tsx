@@ -5,33 +5,8 @@ import { SiGmail } from "react-icons/si";
 
 export const metadata: Metadata = {
   title: "Nivase's Portfolio",
-  description:
-    "Explore my projects, skills, and experiences in web development.",
-  icons: "/favicon.ico",
-  openGraph: {
-    title: "Nivase's Portfolio",
-    description:
-      "Explore my projects, skills, and experiences in web development.",
-    url: "https://nivasesportfolio-dj2al1ctw-nivase56s-projects.vercel.app/", // 🔴 replace with your deployed domain
-    siteName: "Nivase's Portfolio",
-    images: [
-      {
-        url: "https://i.ibb.co/cSKhhbQ2/1200x600wa.png", // 🔴 must be absolute URL
-        width: 1200,
-        height: 630,
-        alt: "Preview of Nivase's Portfolio",
-      },
-    ],
-    locale: "en_US",
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Nivase's Portfolio",
-    description:
-      "Explore my projects, skills, and experiences in web development.",
-    images: ["https://i.ibb.co/cSKhhbQ2/1200x600wa.png"], // 🔴 absolute URL again
-  },
+  description: "Explore Nivase's Portfolio - Software Engineer & Developer",
+  icons:"/favicon.ico",
 };
 
 export default function RootLayout({
@@ -43,27 +18,27 @@ export default function RootLayout({
     <html lang="en">
       <body className="relative">
         {/* Floating WhatsApp + Gmail Row */}
-        <div className="fixed top-4 left-4 md:top-6 md:right-6 flex items-center gap-2 md:gap-4 z-[200000]">
+        <div className="absolute top-6 right-6 flex items-center gap-4 z-[200000]">
           {/* WhatsApp */}
           <a
             href="https://wa.me/917010477407?text=Hello%20Nivas%2C%20I%20visited%20your%20portfolio%20and%20would%20like%20to%20connect."
             target="_blank"
             rel="noopener noreferrer"
-            className="p-2 md:p-4 rounded-full bg-green-500 shadow-md hover:shadow-lg
+            className="p-4 rounded-full bg-green-500 shadow-md hover:shadow-lg
               transform hover:-translate-y-1 transition-all duration-300 ease-out"
             title="Chat on WhatsApp"
           >
-            <FaWhatsapp className="w-5 h-5 md:w-7 md:h-7 text-white" />
+            <FaWhatsapp className="w-7 h-7 text-white" />
           </a>
 
           {/* Gmail */}
           <a
             href="mailto:nivashrajar@gmail.com?subject=Portfolio%20Contact&body=Hello%20Nivas%2C%20I%20saw%20your%20portfolio%20and%20want%20to%20get%20in%20touch."
-            className="p-2 md:p-4 rounded-full bg-[#FF0000] shadow-md hover:shadow-lg
+            className="p-4 rounded-full bg-[#FF0000] shadow-md hover:shadow-lg
               transform hover:-translate-y-1 transition-all duration-300 ease-out"
             title="Send Email"
           >
-            <SiGmail className="w-5 h-5 md:w-7 md:h-7 text-white" />
+            <SiGmail className="w-7 h-7 text-white" />
           </a>
         </div>
 
