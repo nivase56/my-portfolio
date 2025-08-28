@@ -17,7 +17,7 @@ declare module "three-stdlib" {
 }
 
 // A visually appealing loading screen component
-const LoadingScreen: React.FC<{ progress: number }> = ({ progress }) => (
+const LoadingScreen: React.FC<{ progress: number }> = () => (
   <div
     style={{
       position: "absolute",

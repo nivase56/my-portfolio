@@ -3,14 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import swipeleft from "../../../../public/swipeleft.json";
 import {
-  LiaArrowCircleLeftSolid,
-  LiaArrowCircleRightSolid,
-} from "react-icons/lia";
-import {
-  PiArrowFatLeft,
   PiArrowFatLineLeftFill,
   PiArrowFatLineRightFill,
-  PiArrowFatRight,
 } from "react-icons/pi";
 // Declare lottie global type
 declare global {
@@ -162,9 +156,10 @@ const LottieModal = () => {
         ></div>
         <div className="mt-4 text-xl text-center text-white">
           <p className="text-white">
-            Swipe <PiArrowFatLineLeftFill className="inline text-white text-2xl" /> or{" "}
-            <PiArrowFatLineRightFill className="inline text-white text-2xl" /> to enjoy a
-            360° view!
+            Swipe{" "}
+            <PiArrowFatLineLeftFill className="inline text-white text-2xl" /> or{" "}
+            <PiArrowFatLineRightFill className="inline text-white text-2xl" />{" "}
+            to enjoy a 360° view!
           </p>{" "}
         </div>
       </div>
