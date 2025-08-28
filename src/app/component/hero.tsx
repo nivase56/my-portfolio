@@ -9,6 +9,10 @@ import Loader from "./loader/macbookloader";
 import ScreenshotGallery from "./popup/bangingIntro";
 import LottieModal from "./tour/lottie.modal";
 
+type GLBModelViewerProps = {
+  isLoaded: boolean;
+  setIsLoaded: React.Dispatch<React.SetStateAction<boolean>>;
+};
 declare module "three-stdlib" {
   interface OrbitControls {
     rotateLeft: (angle: number) => void;
@@ -32,7 +36,7 @@ const LoadingScreen: React.FC<{ progress: number }> = () => (
   </div>
 );
 
-const GLBModelViewer: React.FC = () => {
+const GLBModelViewer: React.FC<GLBModelViewerProps> = ({ isLoaded, setIsLoaded }) => {
   const mountRef = useRef<HTMLDivElement>(null);
   const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
   const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
@@ -50,7 +54,6 @@ const GLBModelViewer: React.FC = () => {
 
   // New state for loading management
   const [loadingProgress, setLoadingProgress] = useState(0);
-  const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
     if (selected !== null) {
@@ -99,12 +102,12 @@ const GLBModelViewer: React.FC = () => {
           sceneRef.current.add(marker);
         }
       });
-  // Keep loader for extra delay
-  setTimeout(() => {
-    setIsLoaded(true); // hide loader
-    setShowWelcome(true); // show welcome
-    setTimeout(() => setShowWelcome(false), 5000); // hide welcome after 4s
-  }, 2500); // loader delay
+      // Keep loader for extra delay
+      setTimeout(() => {
+        setIsLoaded(true); // hide loader
+        setShowWelcome(true); // show welcome
+        setTimeout(() => setShowWelcome(false), 5000); // hide welcome after 4s
+      }, 2500); // loader delay
     };
 
     // --- Scene, Camera, Renderer Setup (largely unchanged) ---
