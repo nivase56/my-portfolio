@@ -28,7 +28,7 @@ const LoadingScreen: React.FC<{ progress: number }> = () => (
       zIndex: 100,
     }}
   >
-      <Loader />
+    <Loader />
   </div>
 );
 
@@ -99,8 +99,9 @@ const GLBModelViewer: React.FC = () => {
           sceneRef.current.add(marker);
         }
       });
-
-      setIsLoaded(true);
+      setTimeout(() => {
+        setIsLoaded(true);
+      }, 3000);
     };
 
     // --- Scene, Camera, Renderer Setup (largely unchanged) ---
