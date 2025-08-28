@@ -38,7 +38,8 @@ const Loader = () => {
           align-items: center;
           width: 100%;
           height: 100%;
-        }
+margin-left: 50px;
+          }
         .macbook {
           position: relative;
           width: 228px;

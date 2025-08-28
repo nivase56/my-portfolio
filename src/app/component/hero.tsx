@@ -20,17 +20,15 @@ declare module "three-stdlib" {
 const LoadingScreen: React.FC<{ progress: number }> = () => (
   <div
     style={{
-      position: "absolute",
-      top: "30%",
-      left: "8%",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
       width: "100%",
       height: "100%",
       zIndex: 100,
     }}
   >
-    <div className="bg-white">
       <Loader />
-    </div>
   </div>
 );
 
@@ -505,6 +503,7 @@ const GLBModelViewer: React.FC = () => {
           display: "flex",
           alignItems: "center",
           zIndex: 10,
+          opacity: isPopupVisible ? 1 : 0,
           visibility: isPopupVisible ? "visible" : "hidden",
           transition: "all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
           pointerEvents: isPopupVisible ? "auto" : "none",
@@ -524,12 +523,7 @@ const GLBModelViewer: React.FC = () => {
             overflowY: "auto",
             overflowX: "hidden",
             boxShadow: isPopupVisible
-              ? `
-    0 8px 32px rgba(0, 0, 0, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.5),
-    inset 0 -1px 0 rgba(255, 255, 255, 0.1),
-    inset 0 0 8px 4px rgba(255, 255, 255, 0.4)
-  `
+              ? `0 8px 32px rgba(0, 0, 0, 0.1)`
               : "0 0 0 rgba(0, 0, 0, 0)",
             transform: isPopupVisible
               ? "perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1) translateZ(0px)"
