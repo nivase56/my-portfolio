@@ -50,7 +50,7 @@ const Navbar = () => {
           href="https://wa.me/917010477407?text=Hello%20Nivas%2C%20I%20visited%20your%20portfolio%20and%20would%20like%20to%20connect."
           target="_blank"
           rel="noopener noreferrer"
-          className="relative group p-2 md:p-4 rounded-full bg-green-500 shadow-md hover:shadow-lg
+          className="relative group p-2 rounded-full bg-green-500 shadow-md hover:shadow-lg
               transform hover:-translate-y-1 transition-all duration-300 ease-out"
           title="Chat on WhatsApp"
         >
@@ -60,7 +60,7 @@ const Navbar = () => {
         {/* Gmail */}
         <a
           href="mailto:nivashrajar@gmail.com?subject=Portfolio%20Contact&body=Hello%20Nivas%2C%20I%20saw%20your%20portfolio%20and%20want%20to%20get%20in%20touch."
-          className="relative group p-2 md:p-4 rounded-full bg-[#FF0000] shadow-md hover:shadow-lg
+          className="relative group p-2 rounded-full bg-[#FF0000] shadow-md hover:shadow-lg
               transform hover:-translate-y-1 transition-all duration-300 ease-out"
           title="Send Email"
         >
@@ -73,7 +73,7 @@ const Navbar = () => {
             onClick={() => setShowTooltip((prev) => !prev)} // Toggle on click (mobile)
             onMouseEnter={handleMouseEnter} // Show on hover (desktop)
             onMouseLeave={handleMouseLeave} // Hide on hover out (desktop)
-            className="p-2 md:p-4 rounded-full bg-[#009DD1] shadow-md hover:shadow-lg
+            className="p-2 rounded-full bg-[#009DD1] shadow-md hover:shadow-lg
               transform hover:-translate-y-1 transition-all duration-300 ease-out flex items-center justify-center"
           >
             <FiInfo className="w-7 h-7 text-white" />
