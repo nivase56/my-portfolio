@@ -94,7 +94,8 @@ const GLBModelViewer: React.FC = () => {
       modelsRef.current.forEach((_, index) => {
         if (preloadedMarkerRef.current) {
           const marker = preloadedMarkerRef.current.clone(true);
-          marker.scale.set(1.2, 1.2, 1.2);
+          const scale = isMobile ? 2.5 : 1.5;
+          marker.scale.setScalar(scale);
           marker.rotation.y = Math.PI;
           markersRef.current[index] = marker;
           sceneRef.current.add(marker);
@@ -497,46 +498,45 @@ const GLBModelViewer: React.FC = () => {
       <div
         style={{
           position: "absolute",
-          top: isMobile ? "-60px" : "0",
-          left: 0,
+          top: isMobile ? "0px" : "0",
+          left: isMobile ? "10%" : "20%",
           width: "100%",
           height: "100%",
           display: "flex",
           alignItems: "center",
-          justifyContent: "center",
-          background: `radial-gradient(circle at center, rgba(0, 0, 0, ${
-            true ? "0.6" : "0"
-          }), rgba(0, 0, 0, ${true ? "0.2" : "0"}))`,
           zIndex: 10,
-          opacity: isPopupVisible ? 1 : 0,
           visibility: isPopupVisible ? "visible" : "hidden",
           transition: "all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
           pointerEvents: isPopupVisible ? "auto" : "none",
-          backdropFilter: isPopupVisible ? "blur(3px)" : "blur(0px)",
         }}
         onClick={handleClose}
       >
         <div
           style={{
-            background:
-              "linear-gradient(135deg, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.05) 100%)",
-            backdropFilter: "blur(20px)",
+            background: "rgba(0,0,0,0.25)", // darker but instant
+            backdropFilter: "blur(12px)",
+            WebkitBackdropFilter: "blur(12px)",
             border: "1px solid rgba(255, 255, 255, 0.3)",
             borderRadius: "32px",
             padding: "40px",
-            maxWidth: "90%",
-            maxHeight: "80%",
+            maxWidth: isMobile ? "100%" : "60%",
+            maxHeight: isMobile ? "89%" : "90%",
             overflowY: "auto",
+            overflowX: "hidden",
             boxShadow: isPopupVisible
-              ? "0 25px 50px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.1) inset"
+              ? `
+    0 8px 32px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.1),
+    inset 0 0 8px 4px rgba(255, 255, 255, 0.4)
+  `
               : "0 0 0 rgba(0, 0, 0, 0)",
             transform: isPopupVisible
               ? "perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1) translateZ(0px)"
               : "perspective(1000px) rotateX(-90deg) rotateY(15deg) scale(0.3) translateZ(-500px)",
             transition: "all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1)",
             position: "relative",
-            willChange: "transform",
-            transformOrigin: "center center",
+            willChange: "backdrop-filter, transform",
             filter: isPopupVisible ? "brightness(1)" : "brightness(0.3)",
           }}
           onClick={(e) => e.stopPropagation()}
@@ -551,8 +551,8 @@ const GLBModelViewer: React.FC = () => {
               background: "rgba(0,0,0,0.6)",
               border: "none",
               borderRadius: "50%",
-              width: isMobile ? "36px" : "44px", // smaller on mobile
-              height: isMobile ? "36px" : "44px",
+              width: isMobile ? "36px" : "36px", // smaller on mobile
+              height: isMobile ? "36px" : "36px",
               color: "#fff",
               fontSize: isMobile ? "18px" : "22px",
               cursor: "pointer",

@@ -24,7 +24,7 @@ const DeveloperIntro = () => {
 
         <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-blue-500/30 to-purple-500/30 backdrop-blur-sm border border-white/20 mb-4">
           <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-          <span className="text-black font-semibold text-sm sm:text-base ">
+          <span className="text-white font-semibold text-sm sm:text-base ">
             Software Engineer - SDE 2
           </span>
         </div>

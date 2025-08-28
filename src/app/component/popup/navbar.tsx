@@ -81,10 +81,10 @@ const Navbar = () => {
 
           {/* Desktop Tooltip (hover-based) */}
           <div
-            className={`absolute top-16 left-1/2 -translate-x-1/2 
-            w-[400px] px-6 py-3 text-start
+            className={`absolute top-12 mx-1 left-[60%] -translate-x-1/2 
+            w-[350px] px-6 py-3 text-start
             rounded-2xl bg-transparent backdrop-blur-md border border-white/30 shadow-xl
-            text-xl text-white font-medium 
+            text-md text-white font-medium 
             transition-all duration-300 ease-out transform
             ${
               showTooltip
