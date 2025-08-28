@@ -7,6 +7,7 @@ import DeveloperIntro from "./popup/typingIntro";
 import HoneycombGrid from "./popup/sleepingIntro";
 import Loader from "./loader/macbookloader";
 import ScreenshotGallery from "./popup/bangingIntro";
+import LottieModal from "./tour/lottie.modal";
 
 declare module "three-stdlib" {
   interface OrbitControls {
@@ -100,10 +101,7 @@ const GLBModelViewer: React.FC = () => {
         }
       });
 
-      // A short delay to allow the 100% to show before fading
-      setTimeout(() => {
-        setIsLoaded(true);
-      }, 3500);
+      setIsLoaded(true);
     };
 
     // --- Scene, Camera, Renderer Setup (largely unchanged) ---
@@ -439,6 +437,22 @@ const GLBModelViewer: React.FC = () => {
     window.addEventListener("resize", checkMobile);
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
+
+  const [showWelcome, setShowWelcome] = useState(false);
+
+  // when models finish loading
+  useEffect(() => {
+    if (!isLoaded) return;
+
+    setShowWelcome(true);
+
+    const timer = setTimeout(() => {
+      setShowWelcome(false);
+    }, 4000); // exact 4s
+
+    return () => clearTimeout(timer);
+  }, [isLoaded]);
+
   return (
     <div
       style={{
@@ -449,6 +463,25 @@ const GLBModelViewer: React.FC = () => {
     >
       {!isLoaded && <LoadingScreen progress={loadingProgress} />}
 
+      {showWelcome && (
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            background: "rgba(0,0,0,0.1)",
+            color: "white",
+            fontSize: "2rem",
+            fontWeight: "bold",
+            zIndex: 200, // above everything
+            transition: "opacity 1s ease-in-out",
+          }}
+        >
+          <LottieModal />
+        </div>
+      )}
       <div
         ref={mountRef}
         style={{
@@ -472,8 +505,8 @@ const GLBModelViewer: React.FC = () => {
           alignItems: "center",
           justifyContent: "center",
           background: `radial-gradient(circle at center, rgba(0, 0, 0, ${
-            isPopupVisible ? "0.6" : "0"
-          }), rgba(0, 0, 0, ${isPopupVisible ? "0.2" : "0"}))`,
+            true ? "0.6" : "0"
+          }), rgba(0, 0, 0, ${true ? "0.2" : "0"}))`,
           zIndex: 10,
           opacity: isPopupVisible ? 1 : 0,
           visibility: isPopupVisible ? "visible" : "hidden",
@@ -518,10 +551,10 @@ const GLBModelViewer: React.FC = () => {
               background: "rgba(0,0,0,0.6)",
               border: "none",
               borderRadius: "50%",
-              width: isMobile  ? "36px" : "44px", // smaller on mobile
-              height: isMobile  ? "36px" : "44px",
+              width: isMobile ? "36px" : "44px", // smaller on mobile
+              height: isMobile ? "36px" : "44px",
               color: "#fff",
-              fontSize: isMobile  ? "18px" : "22px",
+              fontSize: isMobile ? "18px" : "22px",
               cursor: "pointer",
               display: "flex",
               alignItems: "center",
