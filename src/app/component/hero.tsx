@@ -99,9 +99,12 @@ const GLBModelViewer: React.FC = () => {
           sceneRef.current.add(marker);
         }
       });
-      setTimeout(() => {
-        setIsLoaded(true);
-      }, 3000);
+  // Keep loader for extra delay
+  setTimeout(() => {
+    setIsLoaded(true); // hide loader
+    setShowWelcome(true); // show welcome
+    setTimeout(() => setShowWelcome(false), 5000); // hide welcome after 4s
+  }, 2500); // loader delay
     };
 
     // --- Scene, Camera, Renderer Setup (largely unchanged) ---
@@ -441,17 +444,6 @@ const GLBModelViewer: React.FC = () => {
   const [showWelcome, setShowWelcome] = useState(false);
 
   // when models finish loading
-  useEffect(() => {
-    if (!isLoaded) return;
-
-    setShowWelcome(true);
-
-    const timer = setTimeout(() => {
-      setShowWelcome(false);
-    }, 4000); // exact 4s
-
-    return () => clearTimeout(timer);
-  }, [isLoaded]);
 
   return (
     <div
@@ -463,7 +455,7 @@ const GLBModelViewer: React.FC = () => {
     >
       {!isLoaded && <LoadingScreen progress={loadingProgress} />}
 
-      {showWelcome && (
+      {isLoaded && showWelcome && (
         <div
           style={{
             position: "absolute",

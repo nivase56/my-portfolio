@@ -26,7 +26,6 @@ declare global {
   }
 }
 
-// 📍 REPLACE THIS WITH YOUR LOTTIE JSON DATA
 const animationData = swipeleft; // <-- PASTE YOUR JSON OBJECT HERE
 
 const LottieModal = () => {
