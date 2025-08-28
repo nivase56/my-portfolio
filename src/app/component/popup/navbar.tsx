@@ -1,50 +1,54 @@
-
 "use client";
 import { FaUsers, FaWhatsapp } from "react-icons/fa";
 import { SiGmail } from "react-icons/si";
 import { FiInfo } from "react-icons/fi";
 import React, { useState, useRef, useEffect } from "react";
 import { GiArcher, GiFactory, GiIdCard } from "react-icons/gi";
+import { HiMiniInformationCircle } from "react-icons/hi2";
+import { TbInfoOctagon } from "react-icons/tb";
 
 const Navbar = () => {
-      const [showTooltip, setShowTooltip] = useState(false);
-      const tooltipRef = useRef<HTMLDivElement>(null);
-    
-      // Auto close when clicking outside (for mobile)
-      useEffect(() => {
-        function handleClickOutside(event: MouseEvent) {
-          if (
-            tooltipRef.current &&
-            !tooltipRef.current.contains(event.target as Node)
-          ) {
-            setShowTooltip(false);
-          }
-        }
-        if (showTooltip) {
-          document.addEventListener("mousedown", handleClickOutside);
-        }
-        return () => {
-          document.removeEventListener("mousedown", handleClickOutside);
-        };
-      }, [showTooltip]);
-    
-      // Handle hover for desktop
-      const handleMouseEnter = () => {
-        if (window.innerWidth >= 768) {
-          // Only show tooltip on desktop (md breakpoint)
-          setShowTooltip(true);
-        }
-      };
-    
-      const handleMouseLeave = () => {
-        if (window.innerWidth >= 768) {
-          // Only hide tooltip on desktop
-          setShowTooltip(false);
-        }
-      };
-    
+  const [showTooltip, setShowTooltip] = useState(false);
+  const tooltipRef = useRef<HTMLDivElement>(null);
+
+  // Auto close when clicking outside (for mobile)
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        tooltipRef.current &&
+        !tooltipRef.current.contains(event.target as Node)
+      ) {
+        setShowTooltip(false);
+      }
+    }
+    if (showTooltip) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [showTooltip]);
+
+  // Handle hover for desktop
+  const handleMouseEnter = () => {
+    if (window.innerWidth >= 768) {
+      setShowTooltip(true);
+    }
+  };
+
+  const handleMouseLeave = () => {
+    if (window.innerWidth >= 768) {
+      setShowTooltip(false);
+    }
+  };
+
   return (
-    <div className="absolute top-2 md:top-4 left-2 md:left-8 flex items-center gap-4 z-[200000]">
+    <div
+      className="absolute top-2 md:top-4 left-0 right-0 
+flex items-center justify-between z-[200000] w-full px-4 py-2 rounded-xl"
+    >
+      {/* Left Section (WhatsApp + Gmail) */}
+      <div className="flex items-center gap-4">
         {/* WhatsApp */}
         <a
           href="https://wa.me/917010477407?text=Hello%20Nivas%2C%20I%20visited%20your%20portfolio%20and%20would%20like%20to%20connect."
@@ -66,23 +70,22 @@ const Navbar = () => {
         >
           <SiGmail className="w-7 h-7 text-white" />
         </a>
-
-        {/* Info Button with Tooltip */}
-        <div className="relative" ref={tooltipRef}>
-          <button
-            onClick={() => setShowTooltip((prev) => !prev)} // Toggle on click (mobile)
-            onMouseEnter={handleMouseEnter} // Show on hover (desktop)
-            onMouseLeave={handleMouseLeave} // Hide on hover out (desktop)
-            className="p-2 rounded-full bg-[#009DD1] shadow-md hover:shadow-lg
+              {/* Right Section (Info Button with Tooltip) */}
+      <div className="relative" ref={tooltipRef}>
+        <button
+          onClick={() => setShowTooltip((prev) => !prev)}
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+          className="p-1 rounded-full shadow-md hover:shadow-lg
               transform hover:-translate-y-1 transition-all duration-300 ease-out flex items-center justify-center"
-          >
-            <FiInfo className="w-7 h-7 text-white" />
-          </button>
+        >
+          <TbInfoOctagon className="w-7 h-7 text-white" />
+        </button>
 
-          {/* Desktop Tooltip (hover-based) */}
-          <div
-            className={`absolute top-12 mx-1 left-[60%] -translate-x-1/2 
-            w-[350px] px-6 py-3 text-start
+        {/* Desktop Tooltip */}
+        <div
+          className={`absolute top-10  
+            w-[350px] px-6 py-1 text-start
             rounded-2xl bg-transparent backdrop-blur-md border border-white/30 shadow-xl
             text-md text-white font-medium 
             transition-all duration-300 ease-out transform
@@ -92,6 +95,35 @@ const Navbar = () => {
                 : "opacity-0 scale-95 -translate-y-2"
             }
             hidden md:block`}
+        >
+          <p>
+            Click on each character <FaUsers className="inline text-3xl" /> to
+            explore:
+          </p>
+          <p className="mt-1">
+            • Technical expertise <GiArcher className="inline text-3xl" />
+          </p>
+          <p>
+            • Project experience <GiFactory className="inline text-3xl" />
+          </p>
+          <p>
+            • Professional details <GiIdCard className="inline text-3xl" />
+          </p>
+
+          {/* Arrow */}
+          <div
+            className="absolute -top-2 left-4 w-4 h-4 
+              bg-transparent backdrop-blur-md border-t border-l border-white/30 
+              rotate-45"
+          />
+        </div>
+
+        {/* Mobile Tooltip */}
+        {showTooltip && (
+          <div
+            className="absolute top-10 w-[280px] px-4 py-1 
+              rounded-xl bg-transparent backdrop-blur-xl shadow-xl border border-white/50 text-md text-black font-bold 
+              transform transition-all duration-300 ease-out text-start z-50 md:hidden"
           >
             <p>
               Click on each character <FaUsers className="inline text-3xl" /> to
@@ -106,41 +138,14 @@ const Navbar = () => {
             <p>
               • Professional details <GiIdCard className="inline text-3xl" />
             </p>
-
-            {/* Arrow */}
-            <div
-              className="absolute -top-2 left-1/2 -translate-x-1/2 w-4 h-4 
-              bg-transparent backdrop-blur-md border-t border-l border-white/30 
-              rotate-45"
-            />
           </div>
-
-          {/* Mobile Tooltip (click-based) */}
-          {showTooltip && (
-            <div
-              className="absolute top-12 left-1/2 w-[280px] -translate-x-1/2 px-4 py-3 
-              rounded-xl bg-transparent backdrop-blur-xl shadow-xl border border-white/50 text-md text-black font-bold 
-              transform transition-all duration-300 ease-out text-start z-50 md:hidden"
-            >
-              <p>
-                Click on each character <FaUsers className="inline text-3xl" />{" "}
-                to explore:
-              </p>
-              <p className="mt-1">
-                • Technical expertise <GiArcher className="inline text-3xl" />
-              </p>
-              <p>
-                • Project experience <GiFactory className="inline text-3xl" />
-              </p>
-              <p>
-                • Professional details <GiIdCard className="inline text-3xl" />
-              </p>
-
-            </div>
-          )}
-        </div>
+        )}
       </div>
-  )
-}
+      </div>
 
-export default Navbar
+
+    </div>
+  );
+};
+
+export default Navbar;

@@ -106,7 +106,7 @@ const GLBModelViewer: React.FC<GLBModelViewerProps> = ({ isLoaded, setIsLoaded }
       setTimeout(() => {
         setIsLoaded(true); // hide loader
         setShowWelcome(true); // show welcome
-        setTimeout(() => setShowWelcome(false), 5000); // hide welcome after 4s
+        setTimeout(() => setShowWelcome(false), 3500); // hide welcome after 4s
       }, 2500); // loader delay
     };
 
@@ -466,7 +466,6 @@ const GLBModelViewer: React.FC<GLBModelViewerProps> = ({ isLoaded, setIsLoaded }
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            background: "rgba(0,0,0,0.1)",
             color: "white",
             fontSize: "2rem",
             fontWeight: "bold",

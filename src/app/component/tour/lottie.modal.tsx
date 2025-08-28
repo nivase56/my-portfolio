@@ -120,22 +120,11 @@ const LottieModal = () => {
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center"
-      style={{
-        background: "rgba(255, 255, 255, 0.1)",
-        backdropFilter: "blur(20px)",
-        WebkitBackdropFilter: "blur(20px)",
-      }}
     >
       <div
-        className="relative overflow-y-hidden shadow-2xl"
+        className="relative overflow-y-hidden"
         style={{
-          border: "1px solid rgba(255, 255, 255, 0.2)",
-          borderRadius: "32px",
           padding: "10px",
-          background: "rgba(255, 255, 255, 0.01)",
-          boxShadow: "0 4px 30px rgba(0, 0, 0, 0.1)",
-          backdropFilter: "blur(2.1px)",
-          WebkitBackdropFilter: "blur(2.1px)",
           maxWidth: "90%",
           maxHeight: "80%",
         }}
@@ -144,18 +133,13 @@ const LottieModal = () => {
           ref={containerRef}
           onMouseMove={handleMouseMove}
           onMouseLeave={handleMouseLeave}
-          className="w-[350px] h-96 md:w-[400px] md:h-[400px] mx-auto flex items-center justify-center rounded-2xl overflow-hidden cursor-pointer"
+          className="w-[180px] h-40 md:w-[220px] md:h-[130px] mx-auto mt-[350px] md:mt-[450px] flex items-center justify-center rounded-2xl overflow-hidden cursor-pointer"
           style={{
             border: "none",
-            backgroundColor: "#fafafa",
-            transform: `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`,
-            transition: "transform 0.1s ease-out",
-            boxShadow: "0 0 20px rgba(255, 255, 255, 0.2)",
           }}
         ></div>
-        <div className="mt-4 text-xl text-center text-white">
+        <div className="text-lg  text-center text-white">
           <p className="text-white">
-            Swipe{" "}
             <PiArrowFatLineLeftFill className="inline text-white text-2xl" /> or{" "}
             <PiArrowFatLineRightFill className="inline text-white text-2xl" />{" "}
             to enjoy a 360° view!

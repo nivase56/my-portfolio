@@ -6,7 +6,7 @@ export default function Home() {
     const [isLoaded, setIsLoaded] = useState(false);
 
   return (
-    <div className="h-screen w-full flex items-center justify-center bg-white">
+    <div className="h-screen w-full bg-white">
       {isLoaded && <Navbar />}
       <GLBModelViewer isLoaded={isLoaded} setIsLoaded={setIsLoaded} />
     </div>
