@@ -1,9 +1,11 @@
 "use client";
-import { FaUsers, FaWhatsapp } from "react-icons/fa";
+import { FaUsers, FaWhatsapp, FaDownload } from "react-icons/fa";
 import { SiGmail } from "react-icons/si";
 import React, { useState, useRef, useEffect } from "react";
 import { GiArcher, GiFactory, GiIdCard } from "react-icons/gi";
-import { TbInfoOctagon } from "react-icons/tb";
+import { TbClick, TbInfoOctagon } from "react-icons/tb";
+import { LiaFileDownloadSolid } from "react-icons/lia";
+import { LuHardDriveDownload } from "react-icons/lu";
 
 const Navbar = () => {
   const [showTooltip, setShowTooltip] = useState(false);
@@ -72,7 +74,7 @@ const Navbar = () => {
 
   const getToastClasses = () => {
     const baseClasses =
-      "absolute left-40 top-14 -translate-y-1/2 bg-gradient-to-l from-amber-700 via-yellow-700 to-orange-800 text-white text-[12px] md:text-sm font-semibold px-2 md:px-4 py-2 md:py-3 rounded-lg md:rounded-xl shadow-2xl z-[300000] backdrop-blur-sm border border-white/20 transform transition-all duration-700 ease-out w-[200px] md:w-auto max-w-[250px] md:max-w-none";
+      "absolute left-44 top-12 -translate-y-1/2 bg-gradient-to-l from-amber-700 via-yellow-700 to-orange-800 text-white text-[12px] md:text-sm font-semibold px-2 md:px-4 py-2 md:py-3 rounded-lg md:rounded-xl shadow-2xl z-[300000] backdrop-blur-sm border border-white/20 transform transition-all duration-700 ease-out w-[200px] md:w-auto max-w-[250px] md:max-w-none";
 
     switch (toastPhase) {
       case "entering":
@@ -84,6 +86,16 @@ const Navbar = () => {
       default:
         return `${baseClasses} opacity-0 translate-x-0 scale-90`;
     }
+  };
+
+  const handleDownload = () => {
+    // Replace 'resume.pdf' with the actual filename in your public folder
+    const link = document.createElement('a');
+    link.href = '/resume.pdf'; // Assumes PDF is in public/resume.pdf
+    link.download = 'Nivas_Resume.pdf'; // Filename for download
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   return (
@@ -119,6 +131,22 @@ const Navbar = () => {
             transform: translateY(-50%) translateX(30px) scale(0.6);
           }
         }
+        @keyframes download-bounce {
+          0%, 100% {
+            transform: translateY(0px);
+          }
+          50% {
+            transform: translateY(-3px);
+          }
+        }
+        @keyframes download-pulse {
+          0%, 100% {
+            box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.4);
+          }
+          70% {
+            box-shadow: 0 0 0 10px rgba(255, 255, 255, 0);
+          }
+        }
         .animate-bounce-in {
           animation: bounce-in 0.8s ease-out;
         }
@@ -128,10 +156,20 @@ const Navbar = () => {
         .animate-zoom-out {
           animation: zoom-out 0.7s ease-in;
         }
+        .animate-download-bounce {
+          animation: download-bounce 1.5s ease-in-out infinite;
+        }
+        .animate-download-pulse {
+          animation: download-pulse 2s infinite;
+        }
         .toast-glow {
           box-shadow: 0 0 25px 5px rgba(202, 138, 4, 0.4),
             0 0 50px 10px rgba(180, 83, 9, 0.3),
             0 6px 25px rgba(0, 0, 0, 0.3);
+        }
+        .download-glow {
+          box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4),
+            0 0 20px rgba(59, 130, 246, 0.3);
         }
       `}</style>
 
@@ -155,15 +193,23 @@ const Navbar = () => {
             <SiGmail className="w-7 h-7 text-white" />
           </a>
 
+          {/* Animated Download Button */}
+          <button
+            onClick={handleDownload}
+            className="relative group p-2 rounded-full bg-gradient-to-r shadow-md hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300 ease-out animate-download-pulse download-glow"
+            title="Download Resume"
+          >
+            <LuHardDriveDownload   className="w-7 h-7 text-white animate-download-bounce group-hover:animate-none transition-all duration-300" />
+            
+            {/* Animated background effect */}
+            <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-400 to-blue-500 opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
+            
+            {/* Ripple effect on hover */}
+            <div className="absolute inset-0 rounded-full bg-blue-300 opacity-0 group-hover:opacity-30 group-hover:scale-110 transition-all duration-500"></div>
+          </button>
+
           <div ref={tooltipRef}>
-            <button
-              onClick={() => setShowTooltip((prev) => !prev)}
-              onMouseEnter={handleMouseEnter}
-              onMouseLeave={handleMouseLeave}
-              className="relative p-1 rounded-full shadow-md hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300 ease-out flex items-center justify-center"
-            >
-              <TbInfoOctagon className="w-7 h-7 text-white" />
-            </button>
+            
 
             {/* Toast */}
             {showToast && (
@@ -172,7 +218,7 @@ const Navbar = () => {
                   <span className="font-bold text-xs md:text-sm">
                     Click Each Character to explore more!
                   </span>
-                  <span className="text-lg md:text-xl animate-bounce">👆</span>
+                  <span className="text-lg md:text-xl animate-bounce"><TbClick /></span>
                 </div>
               </div>
             )}
