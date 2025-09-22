@@ -36,7 +36,10 @@ const LoadingScreen: React.FC<{ progress: number }> = () => (
   </div>
 );
 
-const GLBModelViewer: React.FC<GLBModelViewerProps> = ({ isLoaded, setIsLoaded }) => {
+const GLBModelViewer: React.FC<GLBModelViewerProps> = ({
+  isLoaded,
+  setIsLoaded,
+}) => {
   const mountRef = useRef<HTMLDivElement>(null);
   const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
   const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
@@ -490,18 +493,19 @@ const GLBModelViewer: React.FC<GLBModelViewerProps> = ({ isLoaded, setIsLoaded }
       {/* Popup overlay - always present but conditionally visible */}
       <div
         style={{
+          visibility: isPopupVisible ? "visible" : "hidden",
+
           position: "absolute",
-          top: isMobile ? "0px" : "0",
-          left: isMobile ? "10%" : "20%",
+
+          top: "0",
+          left: "0",
           width: "100%",
-          height: "100%",
+          height: "100dvh", // use dynamic viewport height
           display: "flex",
           alignItems: "center",
-          zIndex: 10,
-          opacity: isPopupVisible ? 1 : 0,
-          visibility: isPopupVisible ? "visible" : "hidden",
-          transition: "all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
-          pointerEvents: isPopupVisible ? "auto" : "none",
+          justifyContent: "center",
+          zIndex: 1000,
+          boxSizing: "border-box",
         }}
         onClick={handleClose}
       >
@@ -513,8 +517,8 @@ const GLBModelViewer: React.FC<GLBModelViewerProps> = ({ isLoaded, setIsLoaded }
             border: "1px solid rgba(255, 255, 255, 0.3)",
             borderRadius: "32px",
             padding: "40px",
-            maxWidth: isMobile ? "100%" : "60%",
-            maxHeight: isMobile ? "89%" : "90%",
+            maxWidth: isMobile ? "90%" : "100%",
+            maxHeight: "90dvh",
             overflowY: "auto",
             overflowX: "hidden",
             boxShadow: isPopupVisible
