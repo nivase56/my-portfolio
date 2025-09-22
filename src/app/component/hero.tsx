@@ -98,23 +98,51 @@ const GLBModelViewer: React.FC<GLBModelViewerProps> = ({
       modelsRef.current.forEach((_, index) => {
         if (preloadedMarkerRef.current) {
           const marker = preloadedMarkerRef.current.clone(true);
-          const scale = isMobile ? 2.5 : 1.5;
+          const scale = isMobile ? 3 : 1.5;
           marker.scale.setScalar(scale);
           marker.rotation.y = Math.PI;
+
+          // --- Saturation boost for marker materials ---
+          marker.traverse((child) => {
+            if ((child as THREE.Mesh).isMesh) {
+              const mesh = child as THREE.Mesh;
+              if (mesh.material) {
+                const mats = Array.isArray(mesh.material)
+                  ? mesh.material
+                  : [mesh.material];
+                mats.forEach((mat) => {
+                  if (
+                    mat instanceof THREE.MeshStandardMaterial ||
+                    mat instanceof THREE.MeshBasicMaterial
+                  ) {
+                    const hsl = { h: 0, s: 0, l: 0 };
+                    mat.color.getHSL(hsl);
+
+                    // Only boost saturation
+                    hsl.s = Math.min(1, hsl.s * 0.6);
+
+                    mat.color.setHSL(hsl.h, hsl.s, hsl.l);
+                    mat.needsUpdate = true;
+                  }
+                });
+              }
+            }
+          });
+
           markersRef.current[index] = marker;
           sceneRef.current.add(marker);
         }
       });
+
       // Keep loader for extra delay
       setTimeout(() => {
         setIsLoaded(true); // hide loader
         setShowWelcome(true); // show welcome
         setTimeout(() => setShowWelcome(false), 3500); // hide welcome after 4s
-      }, 2500); // loader delay
+      }, 2500);
     };
 
-    // --- Scene, Camera, Renderer Setup (largely unchanged) ---
-    // Renderer
+    // --- Scene, Camera, Renderer Setup ---
     const renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(window.devicePixelRatio);
@@ -127,22 +155,19 @@ const GLBModelViewer: React.FC<GLBModelViewerProps> = ({
     mountRef.current.appendChild(renderer.domElement);
 
     // Camera
-    const isMobile = window?.innerWidth <= 768; // breakpoint
-
-    const camera = isMobile
-      ? new THREE.PerspectiveCamera(
-          95,
-          window.innerWidth / window.innerHeight,
-          0.5,
-          2000
-        )
-      : new THREE.PerspectiveCamera(
-          75,
-          window.innerWidth / window.innerHeight,
-          0.1,
-          2000
-        );
-    camera.position.set(0, isMobile ? 1.4 : 1.2, isMobile ? 6 : 5);
+    const isMobile = window?.innerWidth <= 768;
+    const isSmallMobile = window.innerWidth <= 400;
+    const camera = new THREE.PerspectiveCamera(
+      isSmallMobile ? 110 : isMobile ? 95 : 75,
+      window.innerWidth / window.innerHeight,
+      0.5,
+      2000
+    );
+    camera.position.set(
+      0,
+      isSmallMobile ? 1.6 : isMobile ? 1.4 : 1.2,
+      isSmallMobile ? 7 : isMobile ? 6 : 5
+    );
     cameraRef.current = camera;
 
     // Controls
@@ -165,7 +190,7 @@ const GLBModelViewer: React.FC<GLBModelViewerProps> = ({
     };
     window.addEventListener("wheel", handleScroll, { passive: true });
 
-    // Lighting setup (unchanged)
+    // Lighting
     const ambientLight = new THREE.AmbientLight(0xfff5e6, 0.6);
     sceneRef.current.add(ambientLight);
     const keyLight = new THREE.DirectionalLight(0xffffff, 1.5);
@@ -192,7 +217,7 @@ const GLBModelViewer: React.FC<GLBModelViewerProps> = ({
     const hemisphereLight = new THREE.HemisphereLight(0x87ceeb, 0x8b4513, 0.4);
     sceneRef.current.add(hemisphereLight);
 
-    // --- Asset Loading using the Manager ---
+    // Loaders
     const gltfLoader = new GLTFLoader(loadingManager);
     const textureLoader = new THREE.TextureLoader(loadingManager);
 
@@ -213,11 +238,11 @@ const GLBModelViewer: React.FC<GLBModelViewerProps> = ({
       const bg = gltf.scene;
       bg.scale.set(1.7, 1.7, 1.7);
       bg.position.set(-1, -2, -3);
-      sceneRef.current.background = new THREE.Color("#e0cb9d"); // white
+      sceneRef.current.background = new THREE.Color("#e0cb9d");
       sceneRef.current.add(bg);
     });
 
-    // Pre-load the marker model once
+    // Marker preload
     gltfLoader.load("/glb/marker.glb", (gltf) => {
       preloadedMarkerRef.current = gltf.scene;
     });
@@ -232,37 +257,25 @@ const GLBModelViewer: React.FC<GLBModelViewerProps> = ({
 
           model.traverse((child) => {
             if ((child as THREE.Mesh).isMesh) {
-              child.castShadow = true;
-              child.receiveShadow = true;
               const mesh = child as THREE.Mesh;
-              if (mesh.material) {
-                if (Array.isArray(mesh.material)) {
-                  mesh.material.forEach((mat) => {
-                    if (mat instanceof THREE.MeshStandardMaterial) {
-                      mat.roughness = Math.max(0.1, mat.roughness || 0.5);
-                      mat.metalness = Math.min(0.1, mat.metalness || 0);
-                      mat.envMapIntensity = 1.8;
-                    }
-                  });
-                } else if (
-                  mesh.material instanceof THREE.MeshStandardMaterial
-                ) {
-                  mesh.material.roughness = Math.max(
-                    0.1,
-                    mesh.material.roughness || 0.5
-                  );
-                  mesh.material.metalness = Math.min(
-                    0.1,
-                    mesh.material.metalness || 0
-                  );
-                  mesh.material.envMapIntensity = 1.8;
-                }
+              mesh.castShadow = true;
+              mesh.receiveShadow = true;
+              if (mesh.material instanceof THREE.MeshStandardMaterial) {
+                mesh.material.roughness = Math.max(
+                  0.1,
+                  mesh.material.roughness || 0.5
+                );
+                mesh.material.metalness = Math.min(
+                  0.1,
+                  mesh.material.metalness || 0
+                );
+                mesh.material.envMapIntensity = 1.8;
               }
             }
           });
 
           sceneRef.current.add(model);
-          modelsRef.current[index] = model; // Use index to ensure correct order
+          modelsRef.current[index] = model;
 
           if (gltf.animations.length > 0) {
             const mixer = new THREE.AnimationMixer(model);
@@ -273,7 +286,7 @@ const GLBModelViewer: React.FC<GLBModelViewerProps> = ({
       }
     );
 
-    // --- Event Handlers & Animation Loop (largely unchanged) ---
+    // Click handler
     const handleClick = (event: MouseEvent) => {
       if (
         !cameraRef.current ||
@@ -304,11 +317,13 @@ const GLBModelViewer: React.FC<GLBModelViewerProps> = ({
     };
     renderer.domElement.addEventListener("click", handleClick);
 
+    // Animation loop
     const animate = () => {
       frameIdRef.current = requestAnimationFrame(animate);
       const delta = clockRef.current.getDelta();
       const elapsedTime = clockRef.current.getElapsedTime();
       mixersRef.current.forEach((m) => m.update(delta));
+
       markersRef.current.forEach((marker, index) => {
         if (marker && modelsRef.current[index]) {
           const characterModel = modelsRef.current[index];
@@ -321,47 +336,40 @@ const GLBModelViewer: React.FC<GLBModelViewerProps> = ({
           marker.lookAt(
             cameraRef.current?.position || new THREE.Vector3(0, 0, 5)
           );
-          const outerGlow = marker.children[0] as THREE.Mesh;
-          const middleGlow = marker.children[1] as THREE.Mesh;
-          if (outerGlow?.material) {
-            (outerGlow.material as THREE.MeshBasicMaterial).opacity =
-              0.2 + Math.sin(elapsedTime * 4 + index) * 0.2;
-            const scale = 1 + Math.sin(elapsedTime * 3 + index * 0.5) * 0.1;
-            outerGlow.scale.set(scale, scale, 1);
-          }
-          if (middleGlow?.material) {
-            (middleGlow.material as THREE.MeshBasicMaterial).opacity =
-              0.4 + Math.sin(elapsedTime * 5 + index * 0.7) * 0.2;
-          }
-          marker.children.forEach((child, childIndex) => {
-            if (childIndex >= 6) {
-              const arrow = child as THREE.Mesh;
-              if (arrow.geometry?.type === "ConeGeometry") {
-                const baseAngle = ((childIndex - 6) / 6) * Math.PI * 2;
-                const animatedAngle = baseAngle + elapsedTime * 0.5;
-                arrow.position.x = Math.cos(animatedAngle) * 0.2;
-                arrow.position.y = Math.sin(animatedAngle) * 0.2;
-                arrow.rotation.z = animatedAngle + Math.PI / 2;
-                if (arrow.material) {
-                  (arrow.material as THREE.MeshBasicMaterial).opacity =
-                    0.6 + Math.sin(elapsedTime * 6 + childIndex) * 0.2;
-                }
-              }
-            }
-          });
         }
       });
+
       controlsRef.current?.update();
       renderer.render(sceneRef.current, camera);
     };
     animate();
 
+    // Resize handler
     const handleResize = () => {
       if (!rendererRef.current || !cameraRef.current) return;
-      rendererRef.current.setSize(window.innerWidth, window.innerHeight);
-      cameraRef.current.aspect = window.innerWidth / window.innerHeight;
+
+      const width = window.innerWidth;
+      const height = window.innerHeight;
+      rendererRef.current.setSize(width, height);
+      cameraRef.current.aspect = width / height;
+
+      const isSmallMobile = width <= 400;
+      const isMobile = width <= 768;
+
+      if (isSmallMobile) {
+        cameraRef.current.fov = 110;
+        cameraRef.current.position.set(0, 1.6, 7);
+      } else if (isMobile) {
+        cameraRef.current.fov = 95;
+        cameraRef.current.position.set(0, 1.4, 6);
+      } else {
+        cameraRef.current.fov = 75;
+        cameraRef.current.position.set(0, 1.2, 5);
+      }
+
       cameraRef.current.updateProjectionMatrix();
     };
+
     window.addEventListener("resize", handleResize);
 
     return () => {
@@ -370,7 +378,6 @@ const GLBModelViewer: React.FC<GLBModelViewerProps> = ({
       window.removeEventListener("wheel", handleScroll);
       renderer.domElement.removeEventListener("click", handleClick);
       controlsRef.current?.dispose();
-      // Proper scene cleanup
       sceneRef.current.traverse((object) => {
         if (object instanceof THREE.Mesh) {
           object.geometry.dispose();
