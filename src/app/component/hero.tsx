@@ -537,7 +537,7 @@ const GLBModelViewer: React.FC<GLBModelViewerProps> = ({
             transition: "all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1)",
             position: "relative",
             willChange: "backdrop-filter, transform",
-            filter: isPopupVisible ? "brightness(1)" : "brightness(0.3)",
+            filter: "brightness(1)",
           }}
           onClick={(e) => e.stopPropagation()}
         >
