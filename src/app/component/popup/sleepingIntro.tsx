@@ -1,34 +1,32 @@
 "use client";
 import React, { JSX, useEffect, useState } from "react";
-import {
-  SiReact,
-  SiNextdotjs,
-  SiTypescript,
-  SiJavascript,
-  SiNodedotjs,
-  SiExpress,
-  SiNestjs,
-  SiGraphql,
-  SiApollographql,
-  SiRedux,
-  SiTailwindcss,
-  SiSass,
-  SiWebpack,
-  SiVite,
-  SiStorybook,
-  SiReactquery,
-  SiPrisma,
-  SiMongodb,
-  SiDocker,
-  SiAmazon,
-  SiFirebase,
-  SiNuxtdotjs,
-  SiThreedotjs,
-  SiD3Dotjs,
-  SiChartdotjs,
-  SiStripe,
-  SiSupabase,
-} from "react-icons/si";
+import { SiReact } from "react-icons/si";
+import { SiNextdotjs } from "react-icons/si";
+import { SiTypescript } from "react-icons/si";
+import { SiJavascript } from "react-icons/si";
+import { SiNodedotjs } from "react-icons/si";
+import { SiExpress } from "react-icons/si";
+import { SiNestjs } from "react-icons/si";
+import { SiGraphql } from "react-icons/si";
+import { SiApollographql } from "react-icons/si";
+import { SiRedux } from "react-icons/si";
+import { SiTailwindcss } from "react-icons/si";
+import { SiSass } from "react-icons/si";
+import { SiWebpack } from "react-icons/si";
+import { SiVite } from "react-icons/si";
+import { SiStorybook } from "react-icons/si";
+import { SiReactquery } from "react-icons/si";
+import { SiPrisma } from "react-icons/si";
+import { SiMongodb } from "react-icons/si";
+import { SiDocker } from "react-icons/si";
+import { SiAmazon } from "react-icons/si";
+import { SiFirebase } from "react-icons/si";
+import { SiNuxtdotjs } from "react-icons/si";
+import { SiThreedotjs } from "react-icons/si";
+import { SiD3Dotjs } from "react-icons/si";
+import { SiChartdotjs } from "react-icons/si";
+import { SiStripe } from "react-icons/si";
+import { SiSupabase } from "react-icons/si";
 
 export type Category = "frontend" | "backend" | "devops";
 export type HoneycombGridProps = {

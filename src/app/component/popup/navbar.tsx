@@ -1,9 +1,14 @@
 "use client";
-import { FaUsers, FaWhatsapp, FaDownload } from "react-icons/fa";
+import { FaUsers } from "react-icons/fa";
+import { FaWhatsapp } from "react-icons/fa";
+import { FaDownload } from "react-icons/fa";
 import { SiGmail } from "react-icons/si";
 import React, { useState, useRef, useEffect } from "react";
-import { GiArcher, GiFactory, GiIdCard } from "react-icons/gi";
-import { TbClick, TbInfoOctagon } from "react-icons/tb";
+import { GiArcher } from "react-icons/gi";
+import { GiFactory } from "react-icons/gi";
+import { GiIdCard } from "react-icons/gi";
+import { TbClick } from "react-icons/tb";
+import { TbInfoOctagon } from "react-icons/tb";
 import { LiaFileDownloadSolid } from "react-icons/lia";
 import { LuHardDriveDownload } from "react-icons/lu";
 

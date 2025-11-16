@@ -1,6 +1,7 @@
 import React from "react";
-import { Code, MapPin, Briefcase, Linkedin, Github, Mail } from "lucide-react";
-import { SiLeetcode } from "react-icons/si"; // for LeetCode icon
+import { Code, MapPin, Briefcase } from "lucide-react";
+import { Linkedin, Github, Mail } from "lucide-react";
+import { SiLeetcode } from "react-icons/si";
 
 const DeveloperIntro = () => {
   return (
@@ -31,7 +32,7 @@ const DeveloperIntro = () => {
 
         {/* Description */}
         <p className="max-w-2xl mx-auto text-white text-left text-sm sm:text-base leading-relaxed">
-          I have <span className="text-4xl font-bold">4.8+</span> years of
+          I have <span className="text-4xl font-bold">5</span> years of
           experience as a software engineer, working from pre-seed startups to
           Fortune 500 companies. I enjoy building clean, readable, and
           maintainable code. Skilled in turning Figma designs into pixel-perfect

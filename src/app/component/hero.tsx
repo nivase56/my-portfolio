@@ -64,12 +64,15 @@ const GLBModelViewer: React.FC<GLBModelViewerProps> = ({
     }
   }, [selected]);
 
+  // Improved close logic: instant hide, preserve animation, accessible
+  const [isClosing, setIsClosing] = useState(false);
   const handleClose = () => {
+    setIsClosing(true);
     setIsPopupVisible(false);
-    // Small delay to let animation finish before clearing selection
     setTimeout(() => {
       setSelected(null);
-    }, 300);
+      setIsClosing(false);
+    }, 300); // match animation duration
   };
 
   const getCharacterBounds = (model: THREE.Group) => {
@@ -500,14 +503,12 @@ const GLBModelViewer: React.FC<GLBModelViewerProps> = ({
       {/* Popup overlay - always present but conditionally visible */}
       <div
         style={{
-          visibility: isPopupVisible ? "visible" : "hidden",
-
+          visibility: isPopupVisible || isClosing ? "visible" : "hidden",
           position: "absolute",
-
           top: "0",
           left: "0",
           width: "100%",
-          height: "100dvh", // use dynamic viewport height
+          height: "100dvh",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
@@ -515,10 +516,12 @@ const GLBModelViewer: React.FC<GLBModelViewerProps> = ({
           boxSizing: "border-box",
         }}
         onClick={handleClose}
+        aria-modal="true"
+        role="dialog"
       >
         <div
           style={{
-            background: "rgba(0,0,0,0.25)", // darker but instant
+            background: "rgba(0,0,0,0.25)",
             backdropFilter: "blur(12px)",
             WebkitBackdropFilter: "blur(12px)",
             border: "1px solid rgba(255, 255, 255, 0.3)",
@@ -541,9 +544,14 @@ const GLBModelViewer: React.FC<GLBModelViewerProps> = ({
           }}
           onClick={(e) => e.stopPropagation()}
         >
-          {/* Close X Button with 3D hover effect */}
+          {/* Accessible Close X Button with 3D hover effect */}
           <button
             onClick={handleClose}
+            tabIndex={0}
+            aria-label="Close popup"
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") handleClose();
+            }}
             style={{
               position: "absolute",
               top: "12px",
@@ -551,10 +559,9 @@ const GLBModelViewer: React.FC<GLBModelViewerProps> = ({
               background: "rgba(0,0,0,0.6)",
               border: "none",
               borderRadius: "50%",
-              width: isMobile ? "36px" : "36px", // smaller on mobile
+              width: isMobile ? "36px" : "36px",
               height: isMobile ? "36px" : "36px",
               color: "#fff",
-              fontSize: isMobile ? "18px" : "22px",
               cursor: "pointer",
               display: "flex",
               alignItems: "center",
@@ -562,10 +569,13 @@ const GLBModelViewer: React.FC<GLBModelViewerProps> = ({
               boxShadow: "0 2px 8px rgba(0,0,0,0.25)",
               backdropFilter: "blur(6px)",
               transition: "all 0.3s ease",
+              fontSize: isMobile ? "22px" : "26px",
+              lineHeight: 1,
+              padding: 0,
+              overflow: "hidden", // ADD THIS
             }}
             onMouseEnter={(e) => {
               if (window.innerWidth >= 768) {
-                // hover only for desktop
                 e.currentTarget.style.background =
                   "linear-gradient(145deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.2))";
                 e.currentTarget.style.transform = "scale(1.1)";
@@ -580,7 +590,6 @@ const GLBModelViewer: React.FC<GLBModelViewerProps> = ({
           >
             ✕
           </button>
-
           {/* Content containers with staggered 3D entrance animations */}
           <div
             style={{
