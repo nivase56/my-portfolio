@@ -7,7 +7,7 @@ const DeveloperIntro = () => {
   return (
     <div className="w-full px-4 sm:px-6 lg:px-8">
       {/* Hero Section */}
-      
+
       <div className="text-center mb-8">
         {/* <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 p-0.5">
           <div className="w-full h-full rounded-full bg-white bg-opacity-20 backdrop-blur-sm flex items-center justify-center">
@@ -32,13 +32,15 @@ const DeveloperIntro = () => {
 
         {/* Description */}
         <p className="max-w-2xl mx-auto text-white text-left text-sm sm:text-base leading-relaxed">
-          I have <span className="text-4xl font-bold">5</span> years of
-          experience as a software engineer, working from pre-seed startups to
-          Fortune 500 companies. I enjoy building clean, readable, and
-          maintainable code. Skilled in turning Figma designs into pixel-perfect
-          UIs, handling API integrations, and structuring efficient folder
-          architectures. I take ownership of complete frontend development and
-          thrive on delivering scalable, user-friendly solutions.
+          I’m a frontend engineer with{" "}
+          <span className="text-4xl font-bold">5</span> years of experience,
+          contributing to teams from early-stage startups to Fortune 500
+          companies. I specialize in writing clean, scalable, and maintainable
+          code, with a strong focus on performance and user experience. Skilled
+          at translating Figma designs into pixel-perfect interfaces,
+          integrating complex APIs, and organizing projects with robust
+          architecture. I take full ownership of the frontend and enjoy building
+          products that are fast, intuitive, and reliable.
         </p>
       </div>
       <div className="text-center mb-4">

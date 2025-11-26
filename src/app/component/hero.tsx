@@ -141,7 +141,7 @@ const GLBModelViewer: React.FC<GLBModelViewerProps> = ({
       setTimeout(() => {
         setIsLoaded(true); // hide loader
         setShowWelcome(true); // show welcome
-        setTimeout(() => setShowWelcome(false), 3500); // hide welcome after 4s
+        setTimeout(() => setShowWelcome(false), 3000); // hide welcome after 4s
       }, 2500);
     };
 
@@ -458,6 +458,9 @@ const GLBModelViewer: React.FC<GLBModelViewerProps> = ({
   }, []);
 
   const [showWelcome, setShowWelcome] = useState(false);
+  const [isCloseHovered, setIsCloseHovered] = useState(false);
+  const [isClosePressed, setIsClosePressed] = useState(false);
+  const [isCloseFocused, setIsCloseFocused] = useState(false);
 
   // when models finish loading
 
@@ -545,51 +548,56 @@ const GLBModelViewer: React.FC<GLBModelViewerProps> = ({
           onClick={(e) => e.stopPropagation()}
         >
           {/* Accessible Close X Button with 3D hover effect */}
-          <button
-            onClick={handleClose}
-            tabIndex={0}
-            aria-label="Close popup"
-            onKeyDown={(e) => {
-              if (e.key === "Enter" || e.key === " ") handleClose();
-            }}
-            style={{
-              position: "absolute",
-              top: "12px",
-              right: "12px",
-              background: "rgba(0,0,0,0.6)",
-              border: "none",
-              borderRadius: "50%",
-              width: isMobile ? "36px" : "36px",
-              height: isMobile ? "36px" : "36px",
-              color: "#fff",
-              cursor: "pointer",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              boxShadow: "0 2px 8px rgba(0,0,0,0.25)",
-              backdropFilter: "blur(6px)",
-              transition: "all 0.3s ease",
-              fontSize: isMobile ? "22px" : "26px",
-              lineHeight: 1,
-              padding: 0,
-              overflow: "hidden", // ADD THIS
-            }}
-            onMouseEnter={(e) => {
-              if (window.innerWidth >= 768) {
-                e.currentTarget.style.background =
-                  "linear-gradient(145deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.2))";
-                e.currentTarget.style.transform = "scale(1.1)";
-              }
-            }}
-            onMouseLeave={(e) => {
-              if (window.innerWidth >= 768) {
-                e.currentTarget.style.background = "rgba(0,0,0,0.6)";
-                e.currentTarget.style.transform = "scale(1)";
-              }
-            }}
-          >
-            ✕
-          </button>
+          <div className="w-full flex justify-end">
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                setIsClosePressed(false);
+                handleClose();
+              }}
+              tabIndex={0}
+              aria-label="Close popup"
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  handleClose();
+                }
+              }}
+              style={{
+                fontSize: "1.2rem",
+                fontWeight: "bold",
+                color:"white",
+                border:"none",
+                transform: isCloseHovered ? "scale(1.2)" : "scale(1)",
+                transition: "transform 0.2s ease-in-out",
+                cursor: "pointer",
+              }}
+              onPointerEnter={() => setIsCloseHovered(true)}
+              onPointerLeave={() => {
+                setIsCloseHovered(false);
+                setIsClosePressed(false);
+              }}
+              onPointerDown={(e) => {
+                setIsClosePressed(true);
+                // prevent focus loss on touch devices
+                e.currentTarget.setPointerCapture(e.pointerId);
+              }}
+              onPointerUp={(e) => {
+                setIsClosePressed(false);
+                if (e.currentTarget.hasPointerCapture(e.pointerId)) {
+                  e.currentTarget.releasePointerCapture(e.pointerId);
+                }
+              }}
+              onFocus={() => setIsCloseFocused(true)}
+              onBlur={() => {
+                setIsCloseFocused(false);
+                setIsClosePressed(false);
+              }}
+            >
+              ✕
+            </button>
+          </div>
           {/* Content containers with staggered 3D entrance animations */}
           <div
             style={{
