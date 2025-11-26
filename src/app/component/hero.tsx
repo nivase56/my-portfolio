@@ -565,7 +565,7 @@ const GLBModelViewer: React.FC<GLBModelViewerProps> = ({
                 }
               }}
               style={{
-                fontSize: "1.2rem",
+                fontSize: "2.1rem",
                 fontWeight: "bold",
                 color:"white",
                 border:"none",
